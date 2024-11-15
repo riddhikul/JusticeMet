@@ -6,14 +6,19 @@ import HomeScreen from './components/HomeScreen'; // Import HomeScreen component
 import CaseInput from './components/CaseInput'; // Import CaseInput component
 import Analysis from './components/Analysis'; // Import Analysis component
 import ChatInterface from './components/ChatInterface'; // Import ChatInterface component
+import Home from './components/Home';
+import ImageCheck from './components/ImageCheck';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator initialRouteName="main">
         <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="image" component={ImageCheck} />
+
+        <Stack.Screen name="main" component={Home} />
         <Stack.Screen name="CaseInput" component={CaseInput} />
         <Stack.Screen name="Analysis" component={Analysis} />
         <Stack.Screen name="ChatInterface" component={ChatInterface} />

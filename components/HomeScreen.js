@@ -1,55 +1,62 @@
-// components/HomeScreen.js
 import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import Header from './Header'; // Import the Header component
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import CaseInput from './CaseInput';  // Import the CaseInput component
+import Analysis from './Analysis';   // Import the Analysis component
+import Header from './Header';       // Import the Header component
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = () => {
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Header /> {/* Include the Header here */}
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.mainButton}
-          onPress={() => navigation.navigate('CaseInput')}
-        >
-          <Text style={styles.buttonText}>Analyze New Case</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.mainButton, styles.secondaryButton]}
-          onPress={() => navigation.navigate('History')}
-        >
-          <Text style={styles.buttonText}>Case History</Text>
-        </TouchableOpacity>
+      {/* Case Input Section */}
+      <View style={styles.card}>
+        <Text style={styles.sectionTitle}>🔍 Add a New Case</Text>
+        <Text style={styles.sectionDescription}>
+          Enter case details and analyze them to get valuable insights.
+        </Text>
+        <CaseInput /> {/* Case input form component */}
       </View>
-    </View>
+
+      {/* Analysis Section */}
+      <View style={styles.card}>
+        <Text style={styles.sectionTitle}>📜 Case History</Text>
+        <Text style={styles.sectionDescription}>
+          View and manage all previously analyzed cases.
+        </Text>
+        <Analysis /> {/* Displaying the analysis component */}
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f6fa',
-  },
-  buttonContainer: {
+    backgroundColor: '#ecf0f1',
     padding: 20,
   },
-  mainButton: {
-    backgroundColor: '#3498db',
-    padding: 15,
+  card: {
+    backgroundColor: '#fff',
     borderRadius: 10,
-    marginVertical: 10,
-    alignItems: 'center',
+    padding: 20,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
     elevation: 3,
   },
-  secondaryButton: {
-    backgroundColor: '#2ecc71',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
+  sectionTitle: {
+    fontSize: 22,
     fontWeight: 'bold',
+    color: '#2c3e50',
+    marginBottom: 10,
+  },
+  sectionDescription: {
+    fontSize: 14,
+    color: '#7f8c8d',
+    marginBottom: 20,
   },
 });
 

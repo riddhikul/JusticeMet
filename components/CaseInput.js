@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
+import axios from 'axios';
+import { addCase, searchCase } from './apiService';
+
 
 const CaseInput = ({ navigation }) => {
   const [caseDetails, setCaseDetails] = useState({
@@ -8,8 +11,34 @@ const CaseInput = ({ navigation }) => {
     evidence: '',
   });
 
-  const handleAnalyzeCase = () => {
-    navigation.navigate('ChatInterface'); 
+  const [searchTitle, setSearchTitle] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+
+  const handleSearchCase = async () => {
+    try {
+      const results = await searchCase(searchTitle);
+      console.log('Search Results:', results);
+      setSearchResults(results);
+      Alert.alert('Search Results', `${results.length} case(s) found`);
+    } catch (error) {
+      Alert.alert('Error', 'No cases found');
+    }
+  };
+
+  const handleAnalyzeCase = async () => {
+    try {
+      const caseData = {
+        title: caseDetails.title,
+        case_description: caseDetails.description,
+        evidence: caseDetails.evidence.split(','), // Convert evidence to an array
+      };
+      const response = await addCase(caseData);
+      console.log("response: ", response);
+      Alert.alert('Success', `Case added with ID: ${response.case_id}`);
+      navigation.navigate('ChatInterface'); // Navigate after successful case addition
+    } catch (error) {
+      Alert.alert('Error', 'Failed to add case');
+    }
   };
 
   return (
@@ -49,6 +78,33 @@ const CaseInput = ({ navigation }) => {
         >
           <Text style={styles.buttonText}>Analyze New Case</Text>
         </TouchableOpacity>
+
+        <Text style={styles.sectionTitle}>Search Cases</Text>
+        <Text style={styles.inputLabel}>Search by Title</Text>
+            <TextInput
+      style={styles.input}
+      value={searchTitle}
+      onChangeText={setSearchTitle}
+      placeholder="Enter case title to search"
+      onSubmitEditing={handleSearchCase}  // This will trigger the search when Enter is pressed
+    />
+
+
+        <TouchableOpacity style={styles.actionButton} onPress={handleSearchCase}>
+          <Text style={styles.buttonText}>Search Case</Text>
+        </TouchableOpacity>
+
+        {searchResults.length > 0 && (
+          <View style={styles.resultsContainer}>
+            <Text style={styles.resultsTitle}>Search Results:</Text>
+            {searchResults.map((caseItem) => (
+              <Text key={caseItem._id} style={styles.resultItem}>
+                {caseItem.title}: {caseItem.case_description}
+              </Text>
+            ))}
+          </View>
+        )}
+
       </View>
     </ScrollView>
   );
@@ -90,6 +146,19 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+
+  actionButton: {
+    backgroundColor: '#3498db', 
+    paddingVertical: 15,         
+    borderRadius: 10,           
+    alignItems: 'center',       
+    marginTop: 20,              
+  },
+  buttonText: {
+    color: '#fff',              
+    fontSize: 18,               
+    fontWeight: 'bold',         
   },
 });
 

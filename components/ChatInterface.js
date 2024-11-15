@@ -36,6 +36,40 @@ const ChatInterface = ({ navigation }) => {
       scrollViewRef.current.scrollToEnd({ animated: true });
     }
   };
+  // const [loading, setLoading] = useState(false);  // Add this state at the top
+  // const fetchBotResponse = async (message) => {
+  //   try {
+  //     setIsTyping(true);
+  //     setLoading(true); // Start loading indicator
+  //     // Replace the URL below with the actual API endpoint
+  //     const response = await fetch('http://localhost:5000/', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ message }), // Send the user's message to the API
+  //     });
+      
+  //     const data = await response.json();
+  //     if (data && data.response) {
+  //       setMessages((prevMessages) => [
+  //         ...prevMessages,
+  //         { id: prevMessages.length + 1, text: message, sender: 'user' },
+  //         { id: prevMessages.length + 2, text: data.response, sender: 'bot' },
+  //       ]);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching bot response:', error);
+  //     // Fallback response in case of an error
+  //     setMessages((prevMessages) => [
+  //       ...prevMessages,
+  //       { id: prevMessages.length + 2, text: 'Sorry, I am having trouble right now. Please try again later.', sender: 'bot' },
+  //     ]);
+  //   } finally {
+  //     setLoading(false); // Stop loading indicator
+  //     setIsTyping(false);
+  //   }
+  // };
 
   const simulateBotResponse = (userMessage) => {
     setIsTyping(true);
@@ -78,6 +112,7 @@ const ChatInterface = ({ navigation }) => {
       setMessages((prev) => [...prev, userMessage]);
       setInputText('');
       simulateBotResponse(inputText);
+    // fetchBotResponse(inputText);
     }
   };
 

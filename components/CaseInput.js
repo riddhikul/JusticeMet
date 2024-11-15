@@ -1,25 +1,15 @@
-// components/CaseInput.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 
 const CaseInput = ({ navigation }) => {
-  // Initializing the state for case details and loading
   const [caseDetails, setCaseDetails] = useState({
     title: '',
     description: '',
     evidence: '',
   });
-  const [loading, setLoading] = useState(false);
 
-  // Handler function for analyzing the case
   const handleAnalyzeCase = () => {
-    setLoading(true);
-    // Simulate case analysis, for example by making an API call
-    setTimeout(() => {
-      setLoading(false);
-      // After analysis, navigate or show results (example)
-      navigation.navigate('AnalysisResults');
-    }, 2000); // Simulating a 2-second delay
+    navigation.navigate('ChatInterface'); 
   };
 
   return (
@@ -56,13 +46,8 @@ const CaseInput = ({ navigation }) => {
         <TouchableOpacity
           style={styles.analyzeButton}
           onPress={handleAnalyzeCase}
-          disabled={loading}
         >
-          {loading ? (
-            <ActivityIndicator size="small" color="#fff" />
-          ) : (
-            <Text style={styles.buttonText}>Analyze Case</Text>
-          )}
+          <Text style={styles.buttonText}>Analyze New Case</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -93,7 +78,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   textArea: {
-    textAlignVertical: 'top', // For multiline TextInput to start from the top
+    textAlignVertical: 'top',
   },
   analyzeButton: {
     backgroundColor: '#3498db',

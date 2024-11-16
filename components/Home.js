@@ -1,112 +1,111 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   View,
   Text,
-  ScrollView,
   TouchableOpacity,
   Dimensions,
-  Platform,
   StatusBar,
+  Image,
   SafeAreaView,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const colors = {
   primary: '#800000',
-  secondary: '#666',
-  background: '#f8f4f0',
-  light: 'rgba(255, 255, 255, 0.9)',
-  dark: '#000',
-  highlight: 'rgba(128, 0, 0, 0.1)',
+  light: '#FFFFFF',
   gradientStart: '#8B0000',
   gradientEnd: '#4B0000',
-};
-
-const FeatureSection = ({ icon, title, description }) => {
-  return (
-    <View style={styles.featureSection}>
-      <View style={styles.featureHeader}>
-        <View style={styles.iconContainer}>
-          <Text style={styles.featureIcon}>{icon}</Text>
-        </View>
-        <View style={styles.headerDivider} />
-      </View>
-      <Text style={styles.featureTitle}>{title}</Text>
-      <Text style={styles.featureDescription}>{description}</Text>
-    </View>
-  );
 };
 
 export default function LandingPage() {
   const navigation = useNavigation();
 
+  // State to track the hover state for web (not used on mobile)
+  const [isLoginHovered, setLoginHovered] = useState(false);
+  const [isSignupHovered, setSignupHovered] = useState(false);
+  
+  // State to track the pressed state for mobile press effects
+  const [isLoginPressed, setLoginPressed] = useState(false);
+  const [isSignupPressed, setSignupPressed] = useState(false);
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={colors.primary} />
-      <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
-        {/* Hero Section */}
-        <View style={styles.heroSection}>
-          <LinearGradient
-            colors={[colors.gradientStart, colors.gradientEnd]}
-            style={styles.heroBackground}
-          >
-            <View style={styles.heroContent}>
-              <View style={styles.logoContainer}>
-                <View style={styles.iconBackground}>
-                  <Text style={styles.scalesIcon}>⚖️</Text>
-                </View>
-                <Text style={styles.title}>JusticeMet</Text>
-              </View>
-              <Text style={styles.subtitle}>
-                Your AI-Powered Judicial Decision Assistant
-              </Text>
-              <View style={styles.decorativeLine} />
-              <Text style={styles.tagline}>
-                Empowering legal professionals with advanced AI technology
-              </Text>
-            </View>
-          </LinearGradient>
+      <LinearGradient
+        colors={[colors.gradientStart, colors.gradientEnd]}
+        style={styles.gradientBackground}
+      >
+        {/* Logo Section */}
+        <View style={styles.logoContainer}>
+          <Image
+            source={require('../assets/image.png')} // Adjust path as per your project structure
+            style={styles.logo}
+            resizeMode="contain"
+          />
+          <Text style={styles.appName}>JusticeMet</Text>
+          <Text style={styles.description}>
+            Your AI-Powered Judicial Decision Assistant
+          </Text>
         </View>
-        {/* Features Section */}
-        <View style={styles.featuresContainer}>
-          <FeatureSection
-            icon="📊"
-            title="Case Analysis"
-            description="Advanced AI algorithms provide comprehensive analysis of case law and precedents."
-          />
-          <FeatureSection
-            icon="🔒"
-            title="Secure Handling"
-            description="Bank-level encryption ensures your sensitive legal data remains protected."
-          />
-          <FeatureSection
-            icon="🤖"
-            title="AI Integration"
-            description="Seamlessly integrate AI models for predictive analysis and decision support."
-          />
-        </View>
-        {/* Authentication Section */}
+
+        {/* Authentication Buttons */}
         <View style={styles.authContainer}>
+          {/* Login Button */}
           <TouchableOpacity
-            style={[styles.authButton, styles.loginButton]}
-            activeOpacity={0.85}
+            style={[
+              styles.authButton,
+              styles.loginButton,
+              isLoginHovered && styles.loginButtonHovered,
+              isLoginPressed && styles.loginButtonPressed,
+            ]}
             onPress={() => navigation.navigate('Login')}
+            onMouseEnter={() => setLoginHovered(true)} // Hover effect for web
+            onMouseLeave={() => setLoginHovered(false)} // Hover effect for web
+            onPressIn={() => setLoginPressed(true)} // Mobile "press" effect
+            onPressOut={() => setLoginPressed(false)} // Mobile "release" effect
           >
-            <Text style={styles.loginButtonText}>Login</Text>
+            <Text
+              style={[
+                styles.authButtonText,
+                isLoginHovered && styles.authButtonTextHovered,
+                isLoginPressed && styles.authButtonTextPressed,
+              ]}
+            >
+              Login
+            </Text>
           </TouchableOpacity>
+
+          {/* Sign Up Button */}
           <TouchableOpacity
-            style={[styles.authButton, styles.signupButton]}
-            activeOpacity={0.85}
+            style={[
+              styles.authButton,
+              styles.signupButton,
+              isSignupHovered && styles.signupButtonHovered,
+              isSignupPressed && styles.signupButtonPressed,
+            ]}
             onPress={() => navigation.navigate('Signup')}
+            onMouseEnter={() => setSignupHovered(true)} // Hover effect for web
+            onMouseLeave={() => setSignupHovered(false)} // Hover effect for web
+            onPressIn={() => setSignupPressed(true)} // Mobile "press" effect
+            onPressOut={() => setSignupPressed(false)} // Mobile "release" effect
           >
-            <Text style={styles.signupButtonText}>Sign Up</Text>
+            <Text
+              style={[
+                styles.authButtonText,
+                isSignupHovered && styles.authButtonTextHovered,
+                isSignupPressed && styles.authButtonTextPressed,
+                !isSignupHovered && styles.authButtonTextDefault, // Default text color when not hovered
+              ]}
+            >
+              Sign Up
+            </Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
+      </LinearGradient>
     </SafeAreaView>
   );
 }
@@ -114,143 +113,79 @@ export default function LandingPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
   },
-  heroSection: {
-    marginBottom: 24,
-  },
-  heroBackground: {
-    paddingVertical: 50,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
-    shadowColor: colors.dark,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    elevation: 8,
-  },
-  heroContent: {
+  gradientBackground: {
+    flex: 1,
     alignItems: 'center',
-    paddingHorizontal: 24,
+    justifyContent: 'space-between',
+    paddingVertical: 20,
   },
   logoContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    marginTop: height * 0.15,
   },
-  iconBackground: {
-    width: 70,
-    height: 70,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
+  logo: {
+    width: 120,
+    height: 120,
   },
-  scalesIcon: {
+  appName: {
     fontSize: 36,
-    color: '#fff',
-  },
-  title: {
-    fontSize: 38,
     color: colors.light,
     fontWeight: 'bold',
-    textAlign: 'center',
+    marginTop: 20,
   },
-  subtitle: {
+  description: {
     fontSize: 18,
     color: colors.light,
     textAlign: 'center',
-    lineHeight: 28,
-    marginBottom: 16,
-  },
-  decorativeLine: {
-    height: 3,
-    width: 60,
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
-    marginVertical: 16,
-  },
-  tagline: {
-    fontSize: 16,
-    color: colors.light,
-    textAlign: 'center',
-    lineHeight: 24,
-  },
-  featuresContainer: {
-    paddingHorizontal: 24,
-    marginBottom: 24,
-  },
-  featureSection: {
-    marginBottom: 32,
-  },
-  featureHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  iconContainer: {
-    width: 50,
-    height: 50,
-    backgroundColor: colors.highlight,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  featureIcon: {
-    fontSize: 24,
-  },
-  headerDivider: {
-    height: 1,
-    flex: 1,
-    backgroundColor: colors.primary,
-    opacity: 0.2,
-    marginLeft: 16,
-  },
-  featureTitle: {
-    fontSize: 20,
-    color: colors.primary,
-    marginBottom: 8,
-    fontWeight: '600',
-  },
-  featureDescription: {
-    fontSize: 16,
-    color: colors.secondary,
-    lineHeight: 24,
+    marginTop: 10,
+    paddingHorizontal: 30,
   },
   authContainer: {
-    padding: 24,
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
+    width: '90%',
+    marginBottom: 40,
   },
   authButton: {
-    padding: 16,
-    borderRadius: 12,
+    padding: 15,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 12,
+    marginVertical: 10,
+    transitionDuration: '0.3s', // Smooth transition for hover effect (for web)
   },
   loginButton: {
-    backgroundColor: colors.highlight,
+    borderColor: 'rgba(255, 255, 255, 0.7)', // Border color matching signup button
     borderWidth: 1,
-    borderColor: colors.primary,
+    backgroundColor: 'transparent', // Transparent background for the login button
   },
   signupButton: {
-    backgroundColor: colors.primary,
+    backgroundColor: 'rgba(255, 255, 255, 0.7)', // Signup button remains as is
   },
-  loginButtonText: {
-    color: colors.primary,
+  loginButtonHovered: {
+    borderColor: colors.primary, // Change border color when hovered
+    backgroundColor: 'rgba(255, 255, 255, 0.2)', // Light background on hover
+  },
+  signupButtonHovered: {
+    backgroundColor: 'rgba(255, 255, 255, 0.3)', // Darker background when hovered
+  },
+  loginButtonPressed: {
+    backgroundColor: 'rgba(255, 255, 255, 0.3)', // Pressed button effect
+  },
+  signupButtonPressed: {
+    backgroundColor: 'rgba(255, 255, 255, 0.7)', // Pressed button effect
+  },
+  authButtonText: {
     fontSize: 18,
     fontWeight: '600',
+    color: 'rgba(255, 255, 255, 0.7)', // Text color matching the border of login button and background of signup button
   },
-  signupButtonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: '600',
+  authButtonTextHovered: {
+    color: colors.primary, // Change text color when hovered
+  },
+  authButtonTextPressed: {
+    color: colors.primary, // Change text color when pressed
+  },
+  authButtonTextDefault: {
+    color: colors.primary, // Default text color when not hovered
   },
 });

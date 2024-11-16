@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Base URL of your Flask API
-const BASE_URL = 'https://justicemet-backend-1.onrender.com'; // Update with your actual Flask server URL
+export const BASE_URL = 'https://justicemet-backend-1.onrender.com'; // Update with your actual Flask server URL
 
 // Add a new case to the database
 export const addCase = async (caseData) => {

@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native';
 import CaseInput from './CaseInput';
 import Analysis from './Analysis';
 import Header from './Header';
 import { searchCase } from './apiService';
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation,  route }) => {
+  const { email } = route.params || {};
   const [searchTitle, setSearchTitle] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [activeSection, setActiveSection] = useState('add-case');
@@ -65,7 +66,7 @@ const HomeScreen = ({ navigation }) => {
                 <Text style={styles.sectionDescription}>
                   Enter case details and analyze them to get valuable insights.
                 </Text>
-                <CaseInput navigation={navigation} />
+                <CaseInput navigation={navigation} route={{ params: { email: email } }} />
               </View>
             </View>
           )}
@@ -79,7 +80,7 @@ const HomeScreen = ({ navigation }) => {
                 <Text style={styles.sectionDescription}>
                   View and manage all previously analyzed cases.
                 </Text>
-                <Analysis navigation={navigation} />
+                <Analysis navigation={navigation} route={{ params: { email: email } }} />
               </View>
             </View>
           )}

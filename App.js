@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
-
-// Import Screens
-import HomeScreen from './components/HomeScreen';
-import CaseInput from './components/CaseInput';
-import Analysis from './components/Analysis';
-import ChatInterface from './components/ChatInterface';
-import Home from './components/Home';
-import ImageCheck from './components/ImageCheck';
-import LoginScreen from './components/LoginScreen';
-import SignupScreen from './components/SignupScreen';
+import HomeScreen from './components/HomeScreen'; // Import HomeScreen
+import CaseInput from './components/CaseInput'; // Import CaseInput
+import Analysis from './components/Analysis'; // Import Analysis
+import ChatInterface from './components/ChatInterface'; // Import ChatInterface
+import Home from './components/Home'; // Import Landing Page (Home)
+import ImageCheck from './components/ImageCheck'; // Import ImageCheck (if needed)
+import LoginScreen from './components/LoginScreen'; // Import Login Screen
+import SignupScreen from './components/SignupScreen'; 
 
 const Stack = createNativeStackNavigator();
 

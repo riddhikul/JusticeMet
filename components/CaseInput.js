@@ -3,13 +3,14 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert,
 import { addCase } from './apiService';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-const CaseInput = ({ navigation }) => {
+const CaseInput = ({ navigation, route }) => {
+  const userEmail = route?.params?.email || 'test@example.com';
   const [caseDetails, setCaseDetails] = useState({
     title: '',
     plaintiff: '',
     defendant: '',  
     case_type: '',
-    date_filed: '',
+    date_filed: '1/1/2001',
     description: '',
   });
 
@@ -26,12 +27,12 @@ const CaseInput = ({ navigation }) => {
   };
 
   const handleAnalyzeCase = async () => {
-    const { title, plaintiff, defendant, case_type, date_filed, description } = caseDetails;
-    if (!title || !plaintiff || !defendant || !case_type || !date_filed || !description) {
-      console.log("Error, Please fill all required fields.")
-      Alert.alert('Error', 'Please fill all required fields.');
-      return;
-    }
+    // const { title, plaintiff, defendant, case_type, date_filed, description } = caseDetails;
+    // if (!title || !plaintiff || !defendant || !case_type || !date_filed || !description) {
+    //   console.log("Error, Please fill all required fields.")
+    //   Alert.alert('Error', 'Please fill all required fields.');
+    //   return;
+    // }
 
     try {
       const finalcase_type =
@@ -50,6 +51,7 @@ const CaseInput = ({ navigation }) => {
         case_type: finalcase_type,
         date_filed: caseDetails.date_filed,
         case_description: caseDetails.description,
+        email: userEmail,
       };
       const response = await addCase(caseData);
       console.log('Response:', response);
@@ -194,7 +196,7 @@ const CaseInput = ({ navigation }) => {
             {/* Counter Questions Button */}
             <TouchableOpacity
               style={styles.counterButton}
-              onPress={() => navigation.navigate('ChatInterface')}
+              onPress={() => navigation.navigate('ChatInterface', { caseId: response.case_id })}
             >
               <Text style={styles.buttonText}> ⚖️ Need More Clarity? Ask AI LegalBot 🤖</Text>
             </TouchableOpacity>

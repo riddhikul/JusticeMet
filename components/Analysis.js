@@ -1,13 +1,34 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
+import { BASE_URL } from './apiService';
 
-const sampleAnalysisData = [
-  { id: '1', caseName: 'Case A', status: 'Valid', details: 'All conditions met.' },
-  { id: '2', caseName: 'Case B', status: 'Pending Review', details: 'Requires additional documents.' },
-  { id: '3', caseName: 'Case C', status: 'Invalid', details: 'Mismatch in case details.' },
-];
+const Analysis = ({ navigation, route }) => {
+  const [analysisData, setAnalysisData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
 
-const Analysis = () => {
+  const userEmail = route?.params?.email || 'test@example.com';
+
+  useEffect(() => {
+    const fetchCases = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/user/${userEmail}/cases`); 
+        if (!response.ok) {
+          throw new Error('Failed to fetch cases');
+        }
+        const data = await response.json();
+        setAnalysisData(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCases();
+  }, [userEmail]);
+
   const renderItem = ({ item }) => (
     <View style={styles.analysisCard}>
       <Text style={styles.caseName}>{item.caseName}</Text>
@@ -16,13 +37,35 @@ const Analysis = () => {
     </View>
   );
 
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#3498db" />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.errorText}>Error: {error}</Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('HomeScreen')}
+        >
+          <Text style={styles.buttonText}>Back to Home</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Case Analysis</Text>
       <FlatList
-        data={sampleAnalysisData}
+        data={analysisData}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
         style={styles.analysisList}
       />
       <TouchableOpacity
@@ -86,6 +129,11 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 16,
+    marginBottom: 20,
   },
 });
 

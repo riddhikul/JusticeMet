@@ -32,7 +32,7 @@ const LoginScreen = ({ navigation }) => {
     }
     setError('');
     console.log('Login attempted with:', email, password);
-    navigation.replace('Home'); // Navigate to Home screen after login
+    navigation.replace('Home', { email: email }); // Navigate to Home screen after login
   };
 
   return (

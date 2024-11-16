@@ -11,10 +11,12 @@ import {
   ActivityIndicator,
   Dimensions
 } from 'react-native';
+import { BASE_URL } from './apiService';
 
 const screenWidth = Dimensions.get('window').width;
 
-const ChatInterface = ({ navigation }) => {
+const ChatInterface = ({ navigation, route }) => {
+  const { caseId } = route.params;
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -36,70 +38,76 @@ const ChatInterface = ({ navigation }) => {
       scrollViewRef.current.scrollToEnd({ animated: true });
     }
   };
-  // const [loading, setLoading] = useState(false);  // Add this state at the top
-  // const fetchBotResponse = async (message) => {
-  //   try {
-  //     setIsTyping(true);
-  //     setLoading(true); // Start loading indicator
-  //     // Replace the URL below with the actual API endpoint
-  //     const response = await fetch('http://localhost:5000/', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({ message }), // Send the user's message to the API
-  //     });
-      
-  //     const data = await response.json();
-  //     if (data && data.response) {
-  //       setMessages((prevMessages) => [
-  //         ...prevMessages,
-  //         { id: prevMessages.length + 1, text: message, sender: 'user' },
-  //         { id: prevMessages.length + 2, text: data.response, sender: 'bot' },
-  //       ]);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching bot response:', error);
-  //     // Fallback response in case of an error
-  //     setMessages((prevMessages) => [
-  //       ...prevMessages,
-  //       { id: prevMessages.length + 2, text: 'Sorry, I am having trouble right now. Please try again later.', sender: 'bot' },
-  //     ]);
-  //   } finally {
-  //     setLoading(false); // Stop loading indicator
-  //     setIsTyping(false);
-  //   }
-  // };
+  const fetchBotResponse = async (userMessage) => {
+    try {
+      setIsTyping(true);
+      // Replace with the actual API endpoint
+      const response = await fetch(`${BASE_URL}/cases/${caseId}/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_query: userMessage,
+          caseId, 
+        }),
+      });
 
-  const simulateBotResponse = (userMessage) => {
-    setIsTyping(true);
-    setTimeout(() => {
-      let botResponse = '';
-      if (userMessage.toLowerCase().includes('evidence')) {
-        botResponse =
-          "Could you please provide more specific details about the evidence? This will help me analyze the case more accurately.";
-      } else if (userMessage.toLowerCase().includes('witness')) {
-        botResponse =
-          "Witness testimony is crucial. How many witnesses are involved, and what is the nature of their testimonies?";
-      } else if (userMessage.toLowerCase().includes('guilty')) {
-        botResponse =
-          "Let me analyze the information provided to assess the likelihood of guilt or innocence based on legal precedents.";
+      const data = await response.json();
+      if (data && data.response) {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { id: prevMessages.length + 1, text: userMessage, isBot: false, timestamp: new Date() },
+          { id: prevMessages.length + 2, text: data.response, isBot: true, timestamp: new Date() },
+        ]);
       } else {
-        botResponse =
-          "Thank you for providing that information. Could you share any additional details that might be relevant to the case?";
+        throw new Error('Invalid response');
       }
-      setMessages((prev) => [
-        ...prev,
+    } catch (error) {
+      console.error('Error fetching bot response:', error);
+      setMessages((prevMessages) => [
+        ...prevMessages,
         {
-          id: prev.length + 2,
-          text: botResponse,
+          id: prevMessages.length + 2,
+          text: 'Sorry, I am having trouble right now. Please try again later.',
           isBot: true,
           timestamp: new Date(),
         },
       ]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
+
+  // const simulateBotResponse = (userMessage) => {
+  //   setIsTyping(true);
+  //   setTimeout(() => {
+  //     let botResponse = '';
+  //     if (userMessage.toLowerCase().includes('evidence')) {
+  //       botResponse =
+  //         "Could you please provide more specific details about the evidence? This will help me analyze the case more accurately.";
+  //     } else if (userMessage.toLowerCase().includes('witness')) {
+  //       botResponse =
+  //         "Witness testimony is crucial. How many witnesses are involved, and what is the nature of their testimonies?";
+  //     } else if (userMessage.toLowerCase().includes('guilty')) {
+  //       botResponse =
+  //         "Let me analyze the information provided to assess the likelihood of guilt or innocence based on legal precedents.";
+  //     } else {
+  //       botResponse =
+  //         "Thank you for providing that information. Could you share any additional details that might be relevant to the case?";
+  //     }
+  //     setMessages((prev) => [
+  //       ...prev,
+  //       {
+  //         id: prev.length + 2,
+  //         text: botResponse,
+  //         isBot: true,
+  //         timestamp: new Date(),
+  //       },
+  //     ]);
+  //     setIsTyping(false);
+  //   }, 1500);
+  // };
 
   const handleSend = () => {
     if (inputText.trim()) {
@@ -109,10 +117,13 @@ const ChatInterface = ({ navigation }) => {
         isBot: false,
         timestamp: new Date(),
       };
-      setMessages((prev) => [...prev, userMessage]);
+      setMessages((prev) => [
+        ...prev,
+        { id: messages.length + 1, text: userMessage, isBot: false, timestamp: new Date() },
+      ]);
       setInputText('');
-      simulateBotResponse(inputText);
-    // fetchBotResponse(inputText);
+      // simulateBotResponse(inputText);
+      fetchBotResponse(userMessage);
     }
   };
 
@@ -142,10 +153,18 @@ const ChatInterface = ({ navigation }) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
-      <View style={styles.background}> {/* Solid light background color */} 
+      <View style={styles.background}>
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>Legal Assistant</Text>
-          <Text style={styles.headerSubtitle}>AI-Powered Case Analysis</Text>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.navigate('Home')} // Replace 'Home' with the actual route name of your home screen
+          >
+            <Text style={styles.backButtonText}>← Back</Text>
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.headerTitle}>Legal Assistant</Text>
+            <Text style={styles.headerSubtitle}>AI-Powered Case Analysis</Text>
+          </View>
         </View>
 
         <ScrollView
@@ -199,6 +218,13 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 20,
     elevation: 5,
   },
+  backButton: {
+    backgroundColor: '#ffffff',
+    padding: 10,
+    borderRadius: 5,
+    elevation: 2,
+  },
+  backButtonText: { color: '#4a90e2', fontWeight: 'bold' },
   headerTitle: { color: '#ffffff', fontSize: screenWidth < 375 ? 18 : 20, fontWeight: 'bold' },
   headerSubtitle: { color: '#dbe7f3', fontSize: screenWidth < 375 ? 12 : 14, marginTop: 5 },
   messagesContainer: { flex: 1 },

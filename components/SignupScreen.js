@@ -11,12 +11,16 @@ import {
   ScrollView,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; // Using Expo icons
+import { BASE_URL } from './apiService';
+import axios from 'axios';
+
 
 const SignUpScreen = ({ navigation }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [profession, setProfession] = useState('');
   const [error, setError] = useState('');
 
   const validateEmail = (email) => {
@@ -24,8 +28,26 @@ const SignUpScreen = ({ navigation }) => {
     return emailRegex.test(email);
   };
 
+  const storeUserData = async () => {
+    try {
+      const response = await axios.post(`${BASE_URL}/signup`, {
+        name: name,
+        email: email,
+        profession: profession,
+      });
+
+      // Assuming the API response contains a success message or status
+      console.log('User registered:', response.data);
+      navigation.replace('Home', { email }); // Pass email to Home screen
+    } catch (error) {
+      console.error('Error during API call:', error);
+      setError('Failed to register user. Please try again later.');
+    }
+  };
+
+
   const handleSignUp = () => {
-    if (!name || !email || !password || !confirmPassword) {
+    if (!name || !email || !password || !confirmPassword || !profession) {
       setError('All fields are required.');
       return;
     }
@@ -42,9 +64,28 @@ const SignUpScreen = ({ navigation }) => {
       return;
     }
     setError('');
-    console.log('User registered with:', { name, email, password });
+    storeUserData();
+    console.log('User registered with:', { name, email, profession });
     navigation.replace('Home'); // Navigate to Home screen after sign-up
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Registered successfully
+        const user = userCredential.user;
+        console.log('User registered:', user);
+        
+        // Optionally, store additional user data in Firestore if needed
+        // storeUserData();
+
+        navigation.replace('Home'); // Navigate to the Home screen on success
+      })
+      .catch((error) => {
+        console.error('Error during signup:', error.message);
+        setError('Failed to register user');
+      });
   };
+
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -96,6 +137,23 @@ const SignUpScreen = ({ navigation }) => {
                 onChangeText={setEmail}
                 keyboardType="email-address"
                 autoCapitalize="none"
+              />
+            </View>
+
+            {/* Profession input field */}
+            <View style={styles.inputContainer}>
+              <MaterialCommunityIcons
+                name="briefcase-outline"
+                size={20}
+                color="#666"
+                style={styles.inputIcon}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Profession"
+                placeholderTextColor="#666"
+                value={profession}
+                onChangeText={setProfession}
               />
             </View>
 

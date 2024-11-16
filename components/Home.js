@@ -48,7 +48,23 @@ export default function LandingPage() {
           />
           <Text style={styles.appName}>JusticeMet</Text>
           <Text style={styles.description}>
-            Your AI-Powered Judicial Decision Assistant
+            Your AI-Powered Case Analysis Platform
+          </Text>
+        </View>
+
+        {/* Extended App Description */}
+        <View style={styles.extendedDescriptionContainer}>
+          <Text style={styles.extendedDescriptionTitle}>What is JusticeMet?</Text>
+          <Text style={styles.extendedDescriptionText}>
+            JusticeMet is an AI-powered platform designed to help legal professionals analyze cases and determine whether a defendant is guilty or not. 
+            The platform uses advanced AI algorithms to evaluate case details and provide an analysis based on existing legal data.
+          </Text>
+          <Text style={styles.extendedDescriptionText}>
+            With an intuitive chat interface, users can interact with the platform to input case details and receive an immediate verdict on the case. 
+            This makes the process of legal analysis faster and more accessible, providing valuable insights for lawyers, judges, and law students.
+          </Text>
+          <Text style={styles.extendedDescriptionText}>
+            JusticeMet is the perfect tool for legal professionals looking for a reliable, fast, and secure way to analyze cases and make informed decisions.
           </Text>
         </View>
 
@@ -118,39 +134,57 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 20,
+    paddingVertical: 10,  // Reduced padding to make the content fit better
   },
   logoContainer: {
     alignItems: 'center',
-    marginTop: height * 0.15,
+    marginTop: height * 0.08,  // Reduced the top margin further to fit the content
   },
   logo: {
-    width: 120,
-    height: 120,
+    width: 100,  // Reduced logo size for a better fit
+    height: 100,
   },
   appName: {
-    fontSize: 36,
+    fontSize: 32,  // Slightly reduced font size for app name
     color: colors.light,
     fontWeight: 'bold',
-    marginTop: 20,
+    marginTop: 10,
   },
   description: {
-    fontSize: 18,
+    fontSize: 16,  // Reduced font size for description
     color: colors.light,
     textAlign: 'center',
-    marginTop: 10,
+    marginTop: 8,
     paddingHorizontal: 30,
+  },
+  extendedDescriptionContainer: {
+    paddingHorizontal: 24,
+    marginTop: 20,  // Reduced the margin to bring it closer
+  },
+  extendedDescriptionTitle: {
+    fontSize: 20,  // Reduced font size for the description title
+    color: colors.light,
+    fontWeight: '600',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  extendedDescriptionText: {
+    fontSize: 14,  // Reduced font size for extended text
+    color: colors.light,
+    textAlign: 'center',
+    lineHeight: 22,
+    marginBottom: 10,
   },
   authContainer: {
     width: '90%',
-    marginBottom: 40,
+    marginBottom: 20,  // Reduced bottom margin
   },
   authButton: {
-    padding: 15,
+    padding: 12,  // Reduced padding to make buttons fit better
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: 10,
+    marginVertical: 8,  // Reduced vertical margin between buttons
     transitionDuration: '0.3s', // Smooth transition for hover effect (for web)
   },
   loginButton: {

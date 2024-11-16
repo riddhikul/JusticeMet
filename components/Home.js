@@ -7,10 +7,23 @@ import {
   TouchableOpacity,
   Dimensions,
   Platform,
-  StatusBar
+  StatusBar,
+  SafeAreaView,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const { width } = Dimensions.get('window');
+
+const colors = {
+  primary: '#800000',
+  secondary: '#666',
+  background: '#f8f4f0',
+  light: 'rgba(255, 255, 255, 0.9)',
+  dark: '#000',
+  highlight: 'rgba(128, 0, 0, 0.1)',
+  gradientStart: '#8B0000',
+  gradientEnd: '#4B0000',
+};
 
 const FeatureSection = ({ icon, title, description }) => {
   return (
@@ -29,156 +42,145 @@ const FeatureSection = ({ icon, title, description }) => {
 
 export default function LandingPage() {
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor={colors.primary} />
       <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
+        {/* Hero Section */}
         <View style={styles.heroSection}>
-          <View style={styles.logoContainer}>
-            <Text style={styles.scalesIcon}>⚖️</Text>
-            <Text style={styles.title}>JusticeMet</Text>
-          </View>
-          <Text style={styles.subtitle}>
-            Your AI-Powered Judicial Decision Assistant
-          </Text>
-          <View style={styles.headerAccent} />
+          <LinearGradient
+            colors={[colors.gradientStart, colors.gradientEnd]}
+            style={styles.heroBackground}
+          >
+            <View style={styles.heroContent}>
+              <View style={styles.logoContainer}>
+                <View style={styles.iconBackground}>
+                  <Text style={styles.scalesIcon}>⚖️</Text>
+                </View>
+                <Text style={styles.title}>JusticeMet</Text>
+              </View>
+
+              <Text style={styles.subtitle}>
+                Your AI-Powered Judicial Decision Assistant
+              </Text>
+
+              <View style={styles.decorativeLine} />
+
+              <Text style={styles.tagline}>
+                Empowering legal professionals with advanced AI technology
+              </Text>
+            </View>
+          </LinearGradient>
         </View>
 
+        {/* Features Section */}
         <View style={styles.featuresContainer}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Key Features</Text>
-            <View style={styles.sectionDivider} />
-          </View>
-          
           <FeatureSection
             icon="📊"
             title="Case Analysis"
-            description="Advanced AI algorithms provide comprehensive analysis of case law and precedents, ensuring thorough legal research and insights."
+            description="Advanced AI algorithms provide comprehensive analysis of case law and precedents."
           />
           <FeatureSection
             icon="🔒"
             title="Secure Handling"
-            description="Bank-level encryption and secure protocols safeguard your sensitive legal data with state-of-the-art protection measures."
+            description="Bank-level encryption ensures your sensitive legal data remains protected."
           />
           <FeatureSection
             icon="🤖"
             title="AI Integration"
-            description="Seamlessly integrate powerful AI models for predictive analysis and data-driven decision support in your legal practice."
+            description="Seamlessly integrate AI models for predictive analysis and decision support."
           />
         </View>
 
+        {/* Authentication Section */}
         <View style={styles.authContainer}>
           <TouchableOpacity
             style={[styles.authButton, styles.loginButton]}
-            activeOpacity={0.8}
+            activeOpacity={0.85}
           >
             <Text style={styles.loginButtonText}>Login</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.authButton, styles.signupButton]}
-            activeOpacity={0.8}
+            activeOpacity={0.85}
           >
             <Text style={styles.signupButtonText}>Sign Up</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f4f0',
+    backgroundColor: colors.background,
   },
   heroSection: {
-    paddingTop: Platform.OS === 'ios' ? 60 : 40,
-    paddingHorizontal: 20,
-    backgroundColor: '#fff',
+    marginBottom: 24,
+  },
+  heroBackground: {
+    paddingVertical: 50,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
-    shadowColor: '#800000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
-    marginBottom: 24,
+    shadowColor: colors.dark,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 8,
+  },
+  heroContent: {
+    alignItems: 'center',
+    paddingHorizontal: 24,
   },
   logoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
     marginBottom: 16,
   },
-  scalesIcon: {
-    fontSize: 40,
+  iconBackground: {
+    width: 70,
+    height: 70,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
     marginRight: 12,
+  },
+  scalesIcon: {
+    fontSize: 36,
+    color: '#fff',
   },
   title: {
     fontSize: 38,
-    color: '#800000',
+    color: colors.light,
     fontWeight: 'bold',
-    ...Platform.select({
-      ios: {
-        fontFamily: 'Georgia',
-      },
-      android: {
-        fontFamily: 'serif',
-      },
-    }),
+    textAlign: 'center',
   },
   subtitle: {
     fontSize: 18,
-    color: '#4a4a4a',
+    color: colors.light,
     textAlign: 'center',
-    marginTop: 8,
-    marginBottom: 20,
-    ...Platform.select({
-      ios: {
-        fontFamily: 'Avenir-Medium',
-      },
-      android: {
-        fontFamily: 'sans-serif-medium',
-      },
-    }),
+    lineHeight: 28,
+    marginBottom: 16,
   },
-  headerAccent: {
+  decorativeLine: {
+    height: 3,
     width: 60,
-    height: 4,
-    backgroundColor: '#800000',
-    alignSelf: 'center',
-    marginBottom: 30,
-    borderRadius: 2,
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    marginVertical: 16,
+  },
+  tagline: {
+    fontSize: 16,
+    color: colors.light,
+    textAlign: 'center',
+    lineHeight: 24,
   },
   featuresContainer: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
     marginBottom: 24,
   },
-  sectionHeader: {
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    color: '#800000',
-    fontWeight: 'bold',
-    marginBottom: 8,
-    ...Platform.select({
-      ios: {
-        fontFamily: 'Georgia',
-      },
-      android: {
-        fontFamily: 'serif',
-      },
-    }),
-  },
-  sectionDivider: {
-    height: 2,
-    width: 40,
-    backgroundColor: '#800000',
-    opacity: 0.6,
-  },
+  
   featureSection: {
     marginBottom: 32,
   },
@@ -190,7 +192,7 @@ const styles = StyleSheet.create({
   iconContainer: {
     width: 50,
     height: 50,
-    backgroundColor: 'rgba(128, 0, 0, 0.1)',
+    backgroundColor: colors.highlight,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
@@ -201,48 +203,28 @@ const styles = StyleSheet.create({
   headerDivider: {
     height: 1,
     flex: 1,
-    backgroundColor: '#800000',
+    backgroundColor: colors.primary,
     opacity: 0.2,
     marginLeft: 16,
   },
   featureTitle: {
     fontSize: 20,
-    color: '#800000',
+    color: colors.primary,
     marginBottom: 8,
     fontWeight: '600',
-    ...Platform.select({
-      ios: {
-        fontFamily: 'Georgia',
-      },
-      android: {
-        fontFamily: 'serif',
-      },
-    }),
   },
   featureDescription: {
     fontSize: 16,
-    color: '#666',
+    color: colors.secondary,
     lineHeight: 24,
-    ...Platform.select({
-      ios: {
-        fontFamily: 'Avenir',
-      },
-      android: {
-        fontFamily: 'sans-serif',
-      },
-    }),
   },
   authContainer: {
-    padding: 20,
-    paddingBottom: Platform.OS === 'ios' ? 40 : 20,
+    padding: 24,
     backgroundColor: '#fff',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    shadowColor: '#800000',
-    shadowOffset: {
-      width: 0,
-      height: -2,
-    },
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 5,
@@ -255,37 +237,21 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   loginButton: {
-    backgroundColor: 'rgba(128, 0, 0, 0.05)',
+    backgroundColor: colors.highlight,
     borderWidth: 1,
-    borderColor: '#800000',
+    borderColor: colors.primary,
   },
   signupButton: {
-    backgroundColor: '#800000',
+    backgroundColor: colors.primary,
   },
   loginButtonText: {
-    color: '#800000',
+    color: colors.primary,
     fontSize: 18,
     fontWeight: '600',
-    ...Platform.select({
-      ios: {
-        fontFamily: 'Avenir-Heavy',
-      },
-      android: {
-        fontFamily: 'sans-serif-medium',
-      },
-    }),
   },
   signupButtonText: {
     color: 'white',
     fontSize: 18,
     fontWeight: '600',
-    ...Platform.select({
-      ios: {
-        fontFamily: 'Avenir-Heavy',
-      },
-      android: {
-        fontFamily: 'sans-serif-medium',
-      },
-    }),
   },
 });

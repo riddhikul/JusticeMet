@@ -1,292 +1,291 @@
 import React from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Dimensions,
+  Platform,
+  StatusBar
+} from 'react-native';
+
+const { width } = Dimensions.get('window');
+
+const FeatureSection = ({ icon, title, description }) => {
+  return (
+    <View style={styles.featureSection}>
+      <View style={styles.featureHeader}>
+        <View style={styles.iconContainer}>
+          <Text style={styles.featureIcon}>{icon}</Text>
+        </View>
+        <View style={styles.headerDivider} />
+      </View>
+      <Text style={styles.featureTitle}>{title}</Text>
+      <Text style={styles.featureDescription}>{description}</Text>
+    </View>
+  );
+};
 
 export default function LandingPage() {
   return (
-    <div className="landing-page">
-      {/* Decorative Elements */}
-      <div className="decorative-circle circle-1"></div>
-      <div className="decorative-circle circle-2"></div>
-      <div className="decorative-lines"></div>
+    <View style={styles.container}>
+      <StatusBar barStyle="dark-content" />
+      <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
+        <View style={styles.heroSection}>
+          <View style={styles.logoContainer}>
+            <Text style={styles.scalesIcon}>⚖️</Text>
+            <Text style={styles.title}>JusticeMet</Text>
+          </View>
+          <Text style={styles.subtitle}>
+            Your AI-Powered Judicial Decision Assistant
+          </Text>
+          <View style={styles.headerAccent} />
+        </View>
 
-      <div className="content">
-        <header className="header">
-          <div className="logo-container">
-            <div className="scales-icon">⚖️</div>
-            <h1>JusticeMet</h1>
-          </div>
-          <p className="subtitle">Your AI-Powered Judicial Decision Assistant</p>
-          <div className="header-accent"></div>
-        </header>
+        <View style={styles.featuresContainer}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Key Features</Text>
+            <View style={styles.sectionDivider} />
+          </View>
+          
+          <FeatureSection
+            icon="📊"
+            title="Case Analysis"
+            description="Advanced AI algorithms provide comprehensive analysis of case law and precedents, ensuring thorough legal research and insights."
+          />
+          <FeatureSection
+            icon="🔒"
+            title="Secure Handling"
+            description="Bank-level encryption and secure protocols safeguard your sensitive legal data with state-of-the-art protection measures."
+          />
+          <FeatureSection
+            icon="🤖"
+            title="AI Integration"
+            description="Seamlessly integrate powerful AI models for predictive analysis and data-driven decision support in your legal practice."
+          />
+        </View>
 
-        <div className="features">
-          <div className="feature-card">
-            <div className="icon">📊</div>
-            <div className="feature-content">
-              <h2>Case Analysis</h2>
-              <p>Analyze case details with precision and accuracy</p>
-            </div>
-          </div>
-
-          <div className="feature-card">
-            <div className="icon">🔒</div>
-            <div className="feature-content">
-              <h2>Secure Handling</h2>
-              <p>Ensure confidential handling of all judicial data</p>
-            </div>
-          </div>
-
-          <div className="feature-card">
-            <div className="icon">🤖</div>
-            <div className="feature-content">
-              <h2>AI Integration</h2>
-              <p>Leverage AI for interpretable legal predictions</p>
-            </div>
-          </div>
-        </div>
-
-        <button className="cta-button">
-          Start Analyzing Cases
-        </button>
-      </div>
-
-      <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Raleway:wght@400;500;600&display=swap');
-
-        body {
-          margin: 0;
-          padding: 0;
-          background: #f5f5f5;
-        }
-
-        .landing-page {
-          min-height: 100vh;
-          background: linear-gradient(135deg, #f8f4f0 0%, #e6d5c3 100%);
-          padding: 2rem;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .decorative-circle {
-          position: absolute;
-          border-radius: 50%;
-          opacity: 0.1;
-        }
-
-        .circle-1 {
-          width: 400px;
-          height: 400px;
-          background: #800000;
-          top: -100px;
-          right: -100px;
-        }
-
-        .circle-2 {
-          width: 300px;
-          height: 300px;
-          background: #800000;
-          bottom: -50px;
-          left: -50px;
-        }
-
-        .decorative-lines {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          height: 100%;
-          background-image: repeating-linear-gradient(
-            90deg,
-            rgba(128, 0, 0, 0.03) 0px,
-            rgba(128, 0, 0, 0.03) 1px,
-            transparent 1px,
-            transparent 30px
-          );
-        }
-
-        .content {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 2rem;
-          position: relative;
-          z-index: 1;
-        }
-
-        .header {
-          text-align: center;
-          margin-bottom: 4rem;
-        }
-
-        .logo-container {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-bottom: 1rem;
-          gap: 1rem;
-        }
-
-        .scales-icon {
-          font-size: 2.5rem;
-          animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-10px); }
-        }
-
-        h1 {
-          font-family: 'Playfair Display', serif;
-          font-size: 3.5rem;
-          color: #800000;
-          margin: 0;
-          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .subtitle {
-          font-family: 'Raleway', sans-serif;
-          font-size: 1.25rem;
-          color: #4a4a4a;
-          margin-top: 1rem;
-          font-weight: 500;
-        }
-
-        .header-accent {
-          width: 100px;
-          height: 3px;
-          background: #800000;
-          margin: 2rem auto;
-          position: relative;
-        }
-
-        .header-accent::before,
-        .header-accent::after {
-          content: '';
-          position: absolute;
-          width: 50px;
-          height: 3px;
-          background: #800000;
-          opacity: 0.5;
-        }
-
-        .header-accent::before {
-          left: -60px;
-        }
-
-        .header-accent::after {
-          right: -60px;
-        }
-
-        .features {
-          display: grid;
-          gap: 2rem;
-          margin-bottom: 4rem;
-        }
-
-        .feature-card {
-          background: rgba(255, 255, 255, 0.95);
-          border-radius: 12px;
-          padding: 2rem;
-          display: flex;
-          align-items: center;
-          gap: 1.5rem;
-          transition: all 0.3s ease;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-          border: 1px solid rgba(128, 0, 0, 0.1);
-        }
-
-        .feature-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .icon {
-          font-size: 2rem;
-          background: rgba(128, 0, 0, 0.1);
-          padding: 1rem;
-          border-radius: 50%;
-          transition: transform 0.3s ease;
-        }
-
-        .feature-card:hover .icon {
-          transform: scale(1.1);
-        }
-
-        .feature-content h2 {
-          font-family: 'Playfair Display', serif;
-          font-size: 1.5rem;
-          color: #800000;
-          margin: 0 0 0.5rem 0;
-        }
-
-        .feature-content p {
-          font-family: 'Raleway', sans-serif;
-          color: #666;
-          font-size: 1rem;
-          line-height: 1.6;
-          margin: 0;
-        }
-
-        .cta-button {
-          display: block;
-          margin: 0 auto;
-          background-color: #800000;
-          color: white;
-          border: none;
-          padding: 1.25rem 2.5rem;
-          font-size: 1.25rem;
-          border-radius: 50px;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          font-family: 'Raleway', sans-serif;
-          font-weight: 600;
-          letter-spacing: 0.5px;
-          box-shadow: 0 4px 6px rgba(128, 0, 0, 0.2);
-          position: relative;
-          overflow: hidden;
-        }
-
-        .cta-button:hover {
-          background-color: #600000;
-          transform: translateY(-2px);
-          box-shadow: 0 6px 12px rgba(128, 0, 0, 0.3);
-        }
-
-        .cta-button::after {
-          content: '';
-          position: absolute;
-          top: -50%;
-          left: -50%;
-          width: 200%;
-          height: 200%;
-          background: rgba(255, 255, 255, 0.1);
-          transform: rotate(45deg);
-          transition: transform 0.3s ease;
-        }
-
-        .cta-button:hover::after {
-          transform: rotate(45deg) translate(50%, 50%);
-        }
-
-        @media (max-width: 768px) {
-          .content {
-            padding: 1rem;
-          }
-
-          h1 {
-            font-size: 2.5rem;
-          }
-
-          .feature-card {
-            flex-direction: column;
-            text-align: center;
-            padding: 1.5rem;
-          }
-
-          .decorative-circle {
-            display: none;
-          }
-        }
-      `}</style>
-    </div>
+        <View style={styles.authContainer}>
+          <TouchableOpacity
+            style={[styles.authButton, styles.loginButton]}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.loginButtonText}>Login</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.authButton, styles.signupButton]}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.signupButtonText}>Sign Up</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f8f4f0',
+  },
+  heroSection: {
+    paddingTop: Platform.OS === 'ios' ? 60 : 40,
+    paddingHorizontal: 20,
+    backgroundColor: '#fff',
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    shadowColor: '#800000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+    marginBottom: 24,
+  },
+  logoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
+  },
+  scalesIcon: {
+    fontSize: 40,
+    marginRight: 12,
+  },
+  title: {
+    fontSize: 38,
+    color: '#800000',
+    fontWeight: 'bold',
+    ...Platform.select({
+      ios: {
+        fontFamily: 'Georgia',
+      },
+      android: {
+        fontFamily: 'serif',
+      },
+    }),
+  },
+  subtitle: {
+    fontSize: 18,
+    color: '#4a4a4a',
+    textAlign: 'center',
+    marginTop: 8,
+    marginBottom: 20,
+    ...Platform.select({
+      ios: {
+        fontFamily: 'Avenir-Medium',
+      },
+      android: {
+        fontFamily: 'sans-serif-medium',
+      },
+    }),
+  },
+  headerAccent: {
+    width: 60,
+    height: 4,
+    backgroundColor: '#800000',
+    alignSelf: 'center',
+    marginBottom: 30,
+    borderRadius: 2,
+  },
+  featuresContainer: {
+    paddingHorizontal: 20,
+    marginBottom: 24,
+  },
+  sectionHeader: {
+    marginBottom: 24,
+  },
+  sectionTitle: {
+    fontSize: 24,
+    color: '#800000',
+    fontWeight: 'bold',
+    marginBottom: 8,
+    ...Platform.select({
+      ios: {
+        fontFamily: 'Georgia',
+      },
+      android: {
+        fontFamily: 'serif',
+      },
+    }),
+  },
+  sectionDivider: {
+    height: 2,
+    width: 40,
+    backgroundColor: '#800000',
+    opacity: 0.6,
+  },
+  featureSection: {
+    marginBottom: 32,
+  },
+  featureHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  iconContainer: {
+    width: 50,
+    height: 50,
+    backgroundColor: 'rgba(128, 0, 0, 0.1)',
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  featureIcon: {
+    fontSize: 24,
+  },
+  headerDivider: {
+    height: 1,
+    flex: 1,
+    backgroundColor: '#800000',
+    opacity: 0.2,
+    marginLeft: 16,
+  },
+  featureTitle: {
+    fontSize: 20,
+    color: '#800000',
+    marginBottom: 8,
+    fontWeight: '600',
+    ...Platform.select({
+      ios: {
+        fontFamily: 'Georgia',
+      },
+      android: {
+        fontFamily: 'serif',
+      },
+    }),
+  },
+  featureDescription: {
+    fontSize: 16,
+    color: '#666',
+    lineHeight: 24,
+    ...Platform.select({
+      ios: {
+        fontFamily: 'Avenir',
+      },
+      android: {
+        fontFamily: 'sans-serif',
+      },
+    }),
+  },
+  authContainer: {
+    padding: 20,
+    paddingBottom: Platform.OS === 'ios' ? 40 : 20,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    shadowColor: '#800000',
+    shadowOffset: {
+      width: 0,
+      height: -2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  authButton: {
+    padding: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+  loginButton: {
+    backgroundColor: 'rgba(128, 0, 0, 0.05)',
+    borderWidth: 1,
+    borderColor: '#800000',
+  },
+  signupButton: {
+    backgroundColor: '#800000',
+  },
+  loginButtonText: {
+    color: '#800000',
+    fontSize: 18,
+    fontWeight: '600',
+    ...Platform.select({
+      ios: {
+        fontFamily: 'Avenir-Heavy',
+      },
+      android: {
+        fontFamily: 'sans-serif-medium',
+      },
+    }),
+  },
+  signupButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: '600',
+    ...Platform.select({
+      ios: {
+        fontFamily: 'Avenir-Heavy',
+      },
+      android: {
+        fontFamily: 'sans-serif-medium',
+      },
+    }),
+  },
+});

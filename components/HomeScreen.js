@@ -9,12 +9,10 @@ const HomeScreen = ({ navigation }) => {
   const [searchTitle, setSearchTitle] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [activeSection, setActiveSection] = useState('add-case');
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const handleSearchCase = async () => {
     try {
       const results = await searchCase(searchTitle);
-      console.log('Search Results:', results);
       setSearchResults(results);
       Alert.alert('Search Results', `${results.length} case(s) found`);
     } catch (error) {
@@ -22,56 +20,24 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
-  const SidebarItem = ({ icon, title, section }) => (
+  const NavbarItem = ({ title, section }) => (
     <TouchableOpacity
-      style={[
-        styles.sidebarItem,
-        activeSection === section && styles.activeSidebarItem,
-        !isSidebarOpen && styles.collapsedSidebarItem
-      ]}
+      style={[styles.navbarItem, activeSection === section && styles.activeNavbarItem]}
       onPress={() => setActiveSection(section)}
     >
-      <Text style={[
-        styles.sidebarIcon,
-        activeSection === section && styles.activeSidebarIcon
-      ]}>
-        {icon}
+      <Text style={[styles.navbarText, activeSection === section && styles.activeNavbarText]}>
+        {title}
       </Text>
-      {isSidebarOpen && (
-        <Text style={[
-          styles.sidebarText,
-          activeSection === section && styles.activeSidebarText
-        ]}>
-          {title}
-        </Text>
-      )}
     </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
-      {/* Sidebar */}
-      <View style={[styles.sidebar, !isSidebarOpen && styles.sidebarCollapsed]}>
-        <TouchableOpacity
-          style={[styles.toggleButton, !isSidebarOpen && styles.toggleButtonCollapsed]}
-          onPress={() => setIsSidebarOpen(!isSidebarOpen)}
-        >
-          <Text style={styles.toggleButtonText}>
-            {isSidebarOpen ? '◀' : '▶'}
-          </Text>
-        </TouchableOpacity>
-
-        {isSidebarOpen && (
-          <View style={styles.sidebarHeader}>
-            <Text style={styles.sidebarTitle}>Dashboard</Text>
-          </View>
-        )}
-        
-        <View style={styles.sidebarContent}>
-          <SidebarItem icon="➕" title="Add Case" section="add-case" />
-          <SidebarItem icon="📜" title="Case History" section="case-history" />
-          <SidebarItem icon="🔎" title="Search Cases" section="search-cases" />
-        </View>
+      {/* Navbar */}
+      <View style={styles.navbar}>
+        <NavbarItem title="Add Case" section="add-case" />
+        <NavbarItem title="Case History" section="case-history" />
+        <NavbarItem title="Search Cases" section="search-cases" />
       </View>
 
       {/* Main Content */}
@@ -155,75 +121,31 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
     backgroundColor: '#FFF5E4',
   },
-  sidebar: {
-    width: 240,
-    backgroundColor: '#800000',
-    paddingTop: 20,
-    transition: 'width 0.3s ease',
-  },
-  sidebarCollapsed: {
-    width: 64,
-  },
-  sidebarHeader: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255,255,255,0.1)',
-  },
-  sidebarContent: {
-    paddingTop: 20,
-  },
-  toggleButton: {
-    alignSelf: 'flex-end',
-    padding: 12,
-    marginRight: 10,
-  },
-  toggleButtonCollapsed: {
-    alignSelf: 'center',
-    marginRight: 0,
-  },
-  toggleButtonText: {
-    color: '#FFF5E4',
-    fontSize: 16,
-  },
-  sidebarTitle: {
-    fontSize: 20,
-    color: '#FFF5E4',
-    fontWeight: '600',
-  },
-  sidebarItem: {
+  navbar: {
     flexDirection: 'row',
+    justifyContent: 'space-around',
     alignItems: 'center',
+    backgroundColor: '#800000',
     paddingVertical: 12,
-    paddingHorizontal: 20,
-    marginBottom: 4,
   },
-  collapsedSidebarItem: {
-    justifyContent: 'center',
-    paddingHorizontal: 0,
+  navbarItem: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
   },
-  activeSidebarItem: {
-    backgroundColor: '#4E2727',
+  activeNavbarItem: {
+    borderBottomWidth: 2,
+    borderBottomColor: '#FFF5E4',
   },
-  sidebarIcon: {
-    fontSize: 20,
-    marginRight: 12,
-    opacity: 0.8,
-    color: '#FFF5E4',
-  },
-  activeSidebarIcon: {
-    opacity: 1,
-  },
-  sidebarText: {
-    color: 'rgba(255,255,255,0.8)',
+  navbarText: {
     fontSize: 16,
-  },
-  activeSidebarText: {
     color: '#FFF5E4',
-    fontWeight: '500',
+    opacity: 0.8,
+  },
+  activeNavbarText: {
+    opacity: 1,
+    fontWeight: 'bold',
   },
   content: {
     flex: 1,
@@ -297,34 +219,6 @@ const styles = StyleSheet.create({
     color: '#FFF5E4',
     fontSize: 16,
     fontWeight: '500',
-  },
-  resultsContainer: {
-    marginTop: 24,
-  },
-  resultsTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#4E2727',
-    marginBottom: 16,
-  },
-  resultItemContainer: {
-    backgroundColor: '#FFF',
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: 'rgba(128, 0, 0, 0.1)',
-  },
-  caseTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#800000',
-    marginBottom: 8,
-  },
-  caseDescription: {
-    fontSize: 14,
-    color: '#4E2727',
-    lineHeight: 20,
   },
 });
 

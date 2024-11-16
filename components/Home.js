@@ -11,6 +11,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 
@@ -41,6 +42,8 @@ const FeatureSection = ({ icon, title, description }) => {
 };
 
 export default function LandingPage() {
+  const navigation = useNavigation();
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={colors.primary} />
@@ -58,20 +61,16 @@ export default function LandingPage() {
                 </View>
                 <Text style={styles.title}>JusticeMet</Text>
               </View>
-
               <Text style={styles.subtitle}>
                 Your AI-Powered Judicial Decision Assistant
               </Text>
-
               <View style={styles.decorativeLine} />
-
               <Text style={styles.tagline}>
                 Empowering legal professionals with advanced AI technology
               </Text>
             </View>
           </LinearGradient>
         </View>
-
         {/* Features Section */}
         <View style={styles.featuresContainer}>
           <FeatureSection
@@ -90,18 +89,19 @@ export default function LandingPage() {
             description="Seamlessly integrate AI models for predictive analysis and decision support."
           />
         </View>
-
         {/* Authentication Section */}
         <View style={styles.authContainer}>
           <TouchableOpacity
             style={[styles.authButton, styles.loginButton]}
             activeOpacity={0.85}
+            onPress={() => navigation.navigate('Login')}
           >
             <Text style={styles.loginButtonText}>Login</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.authButton, styles.signupButton]}
             activeOpacity={0.85}
+            onPress={() => navigation.navigate('Signup')}
           >
             <Text style={styles.signupButtonText}>Sign Up</Text>
           </TouchableOpacity>
@@ -180,7 +180,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     marginBottom: 24,
   },
-  
   featureSection: {
     marginBottom: 32,
   },

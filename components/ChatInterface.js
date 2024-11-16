@@ -12,11 +12,13 @@ import {
   Dimensions
 } from 'react-native';
 import { BASE_URL } from './apiService';
+import axios from 'axios';
 
 const screenWidth = Dimensions.get('window').width;
 
 const ChatInterface = ({ navigation, route }) => {
-  const { caseId } = route.params;
+  const { case_id } = route.params;
+  console.log("case: ", case_id);
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -39,45 +41,48 @@ const ChatInterface = ({ navigation, route }) => {
     }
   };
   const fetchBotResponse = async (userMessage) => {
+    console.log("User message: ", userMessage);
     try {
-      setIsTyping(true);
-      // Replace with the actual API endpoint
-      const response = await fetch(`${BASE_URL}/cases/${caseId}/chat`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_query: userMessage,
-          caseId, 
-        }),
-      });
+        setIsTyping(true);
 
-      const data = await response.json();
-      if (data && data.response) {
+        // First, add the user message to the state
         setMessages((prevMessages) => [
-          ...prevMessages,
-          { id: prevMessages.length + 1, text: userMessage, isBot: false, timestamp: new Date() },
-          { id: prevMessages.length + 2, text: data.response, isBot: true, timestamp: new Date() },
+            ...prevMessages,
+            { id: prevMessages.length + 1, text: userMessage.text, isBot: false, timestamp: new Date() }
         ]);
-      } else {
-        throw new Error('Invalid response');
-      }
+
+        // Axios POST request to get the bot response
+        const response = await axios.post(`${BASE_URL}/cases/${case_id}/chat`, {
+            user_query: userMessage.text,
+        });
+
+        console.log("Axios response data: ", response.data);
+
+        // Check if the response contains the expected chatbot_response
+        if (response.data && response.data.chatbot_response) {
+            // Add the bot response to the state
+            setMessages((prevMessages) => [
+                ...prevMessages,
+                { id: prevMessages.length + 2, text: response.data.chatbot_response, isBot: true, timestamp: new Date() },
+            ]);
+        } else {
+            throw new Error(`Invalid response format: ${JSON.stringify(response.data)}`);
+        }
     } catch (error) {
-      console.error('Error fetching bot response:', error);
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        {
-          id: prevMessages.length + 2,
-          text: 'Sorry, I am having trouble right now. Please try again later.',
-          isBot: true,
-          timestamp: new Date(),
-        },
-      ]);
+        console.error('Error fetching bot response:', error);
+        setMessages((prevMessages) => [
+            ...prevMessages,
+            {
+                id: prevMessages.length + 2,
+                text: 'Sorry, I am having trouble right now. Please try again later.',
+                isBot: true,
+                timestamp: new Date(),
+            },
+        ]);
     } finally {
-      setIsTyping(false);
+        setIsTyping(false);
     }
-  };
+};
 
   // const simulateBotResponse = (userMessage) => {
   //   setIsTyping(true);
@@ -119,7 +124,7 @@ const ChatInterface = ({ navigation, route }) => {
       };
       setMessages((prev) => [
         ...prev,
-        { id: messages.length + 1, text: userMessage, isBot: false, timestamp: new Date() },
+        { id: messages.length + 1, text: userMessage.text, isBot: false, timestamp: new Date() },
       ]);
       setInputText('');
       // simulateBotResponse(inputText);

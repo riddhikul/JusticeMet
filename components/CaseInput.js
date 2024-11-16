@@ -58,9 +58,10 @@ const CaseInput = ({ navigation, route }) => {
       console.log("Case data: ", caseData);
       
       setResponse({
-        prediction: response.prediction,
+        prediction: response.verdict,
         articlesViolated: response.articles_violated,
-        explanation: response.explanation,
+        explanation: response.comment,
+        case_id: response.case_id,
       });
       setLoading(false);
       Alert.alert('Success', `Case added with ID: ${response.case_id}`);
@@ -196,7 +197,7 @@ const CaseInput = ({ navigation, route }) => {
             {/* Counter Questions Button */}
             <TouchableOpacity
               style={styles.counterButton}
-              onPress={() => navigation.navigate('ChatInterface', { caseId: response.case_id })}
+              onPress={() => navigation.navigate('ChatInterface', { case_id: response.case_id })}
             >
               <Text style={styles.buttonText}> ⚖️ Need More Clarity? Ask AI LegalBot 🤖</Text>
             </TouchableOpacity>

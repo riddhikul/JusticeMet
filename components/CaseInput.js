@@ -8,8 +8,8 @@ const CaseInput = ({ navigation }) => {
     title: '',
     plaintiff: '',
     defendant: '',  
-    caseType: '',
-    dateFiled: '',
+    case_type: '',
+    date_filed: '',
     description: '',
   });
 
@@ -17,19 +17,19 @@ const CaseInput = ({ navigation }) => {
 
   const handleDateChange = (event, selectedDate) => {
     if (selectedDate) {
-      setCaseDetails({ ...caseDetails, dateFiled: selectedDate.toISOString().split('T')[0] }); 
+      setCaseDetails({ ...caseDetails, date_filed: selectedDate.toISOString().split('T')[0] }); 
     }
     setShowDatePicker(false); 
   };
 
   const handleAnalyzeCase = async () => {
     try {
-      const finalCaseType =
-        caseDetails.caseType === 'Other'
+      const finalcase_type =
+        caseDetails.case_type === 'Other'
           ? caseDetails.specificCaseType
-          : caseDetails.caseType;
+          : caseDetails.case_type;
 
-      if (!finalCaseType) {
+      if (!finalcase_type) {
         Alert.alert('Error', 'Please specify a valid case type.');
         return;
       }
@@ -37,8 +37,8 @@ const CaseInput = ({ navigation }) => {
         title: caseDetails.title,
         plaintiff: caseDetails.plaintiff,
         defendant: caseDetails.defendant,
-        caseType: finalCaseType,
-        dateFiled: caseDetails.dateFiled,
+        case_type: finalcase_type,
+        date_filed: caseDetails.date_filed,
         case_description: caseDetails.description,
       };
       const response = await addCase(caseData);
@@ -85,9 +85,9 @@ const CaseInput = ({ navigation }) => {
 <Text style={styles.inputLabel}>Case Type</Text>
         <View style={styles.pickerContainer}>
           <Picker
-            selectedValue={caseDetails.caseType}
+            selectedValue={caseDetails.case_type}
             onValueChange={(itemValue) =>
-              setCaseDetails({ ...caseDetails, caseType: itemValue, specificCaseType: '' })
+              setCaseDetails({ ...caseDetails, case_type: itemValue, specificCaseType: '' })
             }
           >
             <Picker.Item label="Select Case Type" value="" />
@@ -99,7 +99,7 @@ const CaseInput = ({ navigation }) => {
         </View>
 
         {/* Show TextInput for "Other" Case Type */}
-        {caseDetails.caseType === 'Other' && (
+        {caseDetails.case_type === 'Other' && (
           <View style={{ marginTop: 10 }}>
             <Text style={styles.inputLabel}>Specify Case Type</Text>
             <TextInput
@@ -120,14 +120,14 @@ const CaseInput = ({ navigation }) => {
   style={styles.dateField}
 >
   <Text style={styles.dateText}>
-    {caseDetails.dateFiled || 'Select Date'} {/* Placeholder for unselected date */}
+    {caseDetails.date_filed || 'Select Date'} {/* Placeholder for unselected date */}
   </Text>
 </TouchableOpacity>
 
 {/* Render DateTimePicker */}
 {showDatePicker && (
   <DateTimePicker
-    value={caseDetails.dateFiled ? new Date(caseDetails.dateFiled) : new Date()} // Fallback to today
+    value={caseDetails.date_filed ? new Date(caseDetails.date_filed) : new Date()} // Fallback to today
     mode="date"
     display="calendar" // Use 'calendar' for Android and Windows
     onChange={(event, selectedDate) => {

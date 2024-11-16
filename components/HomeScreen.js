@@ -31,6 +31,13 @@ const HomeScreen = ({ navigation }) => {
     </TouchableOpacity>
   );
 
+  const handleLogout = () => {
+    // Your logout logic here, like clearing async storage or authentication token
+    Alert.alert('Logged out successfully');
+    // You could navigate to the login screen, for example:
+    navigation.navigate('Login');
+  };
+
   return (
     <View style={styles.container}>
       {/* Navbar */}
@@ -38,6 +45,10 @@ const HomeScreen = ({ navigation }) => {
         <NavbarItem title="Add Case" section="add-case" />
         <NavbarItem title="Case History" section="case-history" />
         <NavbarItem title="Search Cases" section="search-cases" />
+        {/* Logout Button */}
+        <TouchableOpacity style={styles.navbarItem} onPress={handleLogout}>
+          <Text style={styles.navbarText}>Logout</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Main Content */}
@@ -88,8 +99,8 @@ const HomeScreen = ({ navigation }) => {
                     placeholderTextColor="#9E9E9E"
                     onSubmitEditing={handleSearchCase}
                   />
-                  <TouchableOpacity 
-                    style={styles.actionButton} 
+                  <TouchableOpacity
+                    style={styles.actionButton}
                     onPress={handleSearchCase}
                   >
                     <Text style={styles.buttonText}>Search</Text>
@@ -125,10 +136,15 @@ const styles = StyleSheet.create({
   },
   navbar: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#800000',
     paddingVertical: 12,
+    paddingHorizontal: 16,
+    flexWrap: 'wrap', // Allows items to wrap to the next line on smaller screens
+    marginBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#D3D3D3',
   },
   navbarItem: {
     paddingVertical: 8,
@@ -159,10 +175,10 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     marginBottom: 24,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 8,
   },
   cardHeader: {
     flexDirection: 'row',

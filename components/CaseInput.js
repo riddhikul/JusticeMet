@@ -7,7 +7,7 @@ const CaseInput = ({ navigation }) => {
   const [caseDetails, setCaseDetails] = useState({
     title: '',
     plaintiff: '',
-    defendant: '',
+    defendant: '',  
     caseType: '',
     dateFiled: '',
     description: '',
@@ -17,24 +17,34 @@ const CaseInput = ({ navigation }) => {
 
   const handleDateChange = (event, selectedDate) => {
     if (selectedDate) {
-      setCaseDetails({ ...caseDetails, dateFiled: selectedDate.toISOString().split('T')[0] }); // Format as YYYY-MM-DD
+      setCaseDetails({ ...caseDetails, dateFiled: selectedDate.toISOString().split('T')[0] }); 
     }
-    setShowDatePicker(false); // Close date picker
+    setShowDatePicker(false); 
   };
 
   const handleAnalyzeCase = async () => {
     try {
+      const finalCaseType =
+        caseDetails.caseType === 'Other'
+          ? caseDetails.specificCaseType
+          : caseDetails.caseType;
+
+      if (!finalCaseType) {
+        Alert.alert('Error', 'Please specify a valid case type.');
+        return;
+      }
       const caseData = {
         title: caseDetails.title,
         plaintiff: caseDetails.plaintiff,
         defendant: caseDetails.defendant,
-        caseType: caseDetails.caseType,
+        caseType: finalCaseType,
         dateFiled: caseDetails.dateFiled,
         case_description: caseDetails.description,
       };
       const response = await addCase(caseData);
-      navigation.navigate('ChatInterface');
       console.log('Response:', response);
+      console.log("Case data: ", caseData);
+      navigation.navigate('ChatInterface');
       Alert.alert('Success', `Case added with ID: ${response.case_id}`);
     } catch (error) {
       Alert.alert('Error', 'Failed to add case');
@@ -71,32 +81,37 @@ const CaseInput = ({ navigation }) => {
           placeholder="Enter names of defendant(s)"
         />
 
+{/* Case Type */}
 <Text style={styles.inputLabel}>Case Type</Text>
-<View style={styles.pickerContainer}>
-  <Picker
-    selectedValue={caseDetails.caseType}
-    onValueChange={(itemValue) => setCaseDetails({ ...caseDetails, caseType: itemValue })}
-  >
-    <Picker.Item label="Select Case Type" value="" />
-    <Picker.Item label="Criminal" value="Criminal" />
-    <Picker.Item label="Civil" value="Civil" />
-    <Picker.Item label="Custody" value="Custody" />
-    <Picker.Item label="Other" value="Other" />
-  </Picker>
-</View>
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={caseDetails.caseType}
+            onValueChange={(itemValue) =>
+              setCaseDetails({ ...caseDetails, caseType: itemValue, specificCaseType: '' })
+            }
+          >
+            <Picker.Item label="Select Case Type" value="" />
+            <Picker.Item label="Criminal" value="Criminal" />
+            <Picker.Item label="Civil" value="Civil" />
+            <Picker.Item label="Custody" value="Custody" />
+            <Picker.Item label="Other" value="Other" />
+          </Picker>
+        </View>
 
-{/* Show TextInput for "Other" Case Type */}
-{caseDetails.caseType === "Other" && (
-  <View style={{ marginTop: 10 }}>
-    <Text style={styles.inputLabel}>Specify Case Type</Text>
-    <TextInput
-      style={styles.input}
-      value={caseDetails.specificCaseType || ''}
-      onChangeText={(text) => setCaseDetails({ ...caseDetails, specificCaseType: text })}
-      placeholder="Enter specific case type"
-    />
-  </View>
-)}
+        {/* Show TextInput for "Other" Case Type */}
+        {caseDetails.caseType === 'Other' && (
+          <View style={{ marginTop: 10 }}>
+            <Text style={styles.inputLabel}>Specify Case Type</Text>
+            <TextInput
+              style={styles.input}
+              value={caseDetails.specificCaseType}
+              onChangeText={(text) =>
+                setCaseDetails({ ...caseDetails, specificCaseType: text })
+              }
+              placeholder="Enter specific case type"
+            />
+          </View>
+        )}
 
 {/* Date Filed */}
 <Text style={styles.inputLabel}>Date Filed</Text>

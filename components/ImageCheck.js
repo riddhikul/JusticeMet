@@ -4,7 +4,7 @@ import { View, Image, StyleSheet } from 'react-native';
 const ImageCheck = () => {
   return (
     <View style={styles.container}>
-      <Image source={require('../assets/Homehero.jpg')} style={styles.image} />
+      {/* <Image source={require('../assets/Homehero.jpg')} style={styles.image} /> */}
     </View>
   );
 };

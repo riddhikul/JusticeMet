@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native';
-import CaseInput from './CaseInput';  // Import the CaseInput component
-import Analysis from './Analysis';   // Import the Analysis component
-import Header from './Header';       // Import the Header component
-import { searchCase } from './apiService';
+import CaseInput from './CaseInput'; // Import CaseInput component
+import Analysis from './Analysis';  // Import Analysis component
+import Header from './Header';      // Import Header component
+import { searchCase } from './apiService'; // Import API service
 
 const HomeScreen = ({ navigation }) => {
-
   const [searchTitle, setSearchTitle] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [activeSection, setActiveSection] = useState('add-case'); // Tracks current section
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Sidebar toggle state
 
   const handleSearchCase = async () => {
     try {
@@ -22,85 +23,176 @@ const HomeScreen = ({ navigation }) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <Header /> {/* Include the Header here */}
+    <View style={styles.container}>
+      {/* Sidebar */}
+      <View style={[styles.sidebar, !isSidebarOpen && styles.sidebarCollapsed]}>
+        {/* Toggle Button */}
+        <TouchableOpacity
+          style={styles.toggleButton}
+          onPress={() => setIsSidebarOpen(!isSidebarOpen)}
+        >
+          <Text style={styles.toggleButtonText}>{isSidebarOpen ? '❌' : '☰'}</Text>
+        </TouchableOpacity>
 
-      {/* Case Input Section (Wrapped in Card UI) */}
-      <View style={styles.card}>
-        <View style={styles.cardHeader}>
-          <Text style={styles.sectionTitle}>🔍 Add a New Case</Text>
-        </View>
-        <View style={styles.cardBody}>
-          <Text style={styles.sectionDescription}>
-            Enter case details and analyze them to get valuable insights.
-          </Text>
-          <CaseInput navigation={navigation} />
-        </View>
+        {/* Sidebar Items */}
+        {isSidebarOpen && (
+          <>
+            <Text style={styles.sidebarTitle}>Menu</Text>
+            <TouchableOpacity
+              style={[
+                styles.sidebarItem,
+                activeSection === 'add-case' && styles.activeSidebarItem,
+              ]}
+              onPress={() => setActiveSection('add-case')}
+            >
+              <Text style={styles.sidebarText}>➕ Add Case</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.sidebarItem,
+                activeSection === 'case-history' && styles.activeSidebarItem,
+              ]}
+              onPress={() => setActiveSection('case-history')}
+            >
+              <Text style={styles.sidebarText}>📜 Case History</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.sidebarItem,
+                activeSection === 'search-cases' && styles.activeSidebarItem,
+              ]}
+              onPress={() => setActiveSection('search-cases')}
+            >
+              <Text style={styles.sidebarText}>🔎 Search Cases</Text>
+            </TouchableOpacity>
+          </>
+        )}
       </View>
 
-      {/* Analysis Section (Wrapped in Card UI) */}
-      <View style={styles.card}>
-        <View style={styles.cardHeader}>
-          <Text style={styles.sectionTitle}>📜 Case History</Text>
-        </View>
-        <View style={styles.cardBody}>
-          <Text style={styles.sectionDescription}>
-            View and manage all previously analyzed cases.
-          </Text>
-          <Analysis navigation={navigation} /> {/* Displaying the analysis component */}
-        </View>
-      </View>
-
-  {/* Search Cases Section */}
-  <View style={styles.card}>
-        <View style={styles.cardHeader}>
-          <Text style={styles.sectionTitle}>🔎 Search Cases</Text>
-        </View>
-
-        {/* Search Input */}
-        <View style={styles.cardBody}>
-          <Text style={styles.inputLabel}>Search by Title</Text>
-          <TextInput
-            style={styles.input}
-            value={searchTitle}
-            onChangeText={setSearchTitle}
-            placeholder="Enter case title to search"
-            onSubmitEditing={handleSearchCase} // Trigger search on Enter
-          />
-
-          {/* Search Button */}
-          <TouchableOpacity style={styles.actionButton} onPress={handleSearchCase}>
-            <Text style={styles.buttonText}>Search Case</Text>
-          </TouchableOpacity>
-
-          {/* Search Results Display */}
-          {searchResults.length > 0 && (
-            <View style={styles.resultsContainer}>
-              <Text style={styles.resultsTitle}>Search Results:</Text>
-              {searchResults.map((caseItem) => (
-                <View key={caseItem._id} style={styles.resultItemContainer}>
-                  <Text style={styles.resultItem}>
-                    <Text style={styles.caseTitle}>{caseItem.title}</Text>: {caseItem.case_description}
-                  </Text>
-                </View>
-              ))}
+      {/* Main Content */}
+      <ScrollView style={styles.content}>
+        <Header /> {/* Keep the header */}
+        {activeSection === 'add-case' && (
+          <View style={styles.card}>
+            <View style={styles.cardHeader}>
+              <Text style={styles.sectionTitle}>🔍 Add a New Case</Text>
             </View>
-          )}
-        </View>
-      </View>
-
-    </ScrollView>
+            <View style={styles.cardBody}>
+              <Text style={styles.sectionDescription}>
+                Enter case details and analyze them to get valuable insights.
+              </Text>
+              <CaseInput navigation={navigation} />
+            </View>
+          </View>
+        )}
+        {activeSection === 'case-history' && (
+          <View style={styles.card}>
+            <View style={styles.cardHeader}>
+              <Text style={styles.sectionTitle}>📜 Case History</Text>
+            </View>
+            <View style={styles.cardBody}>
+              <Text style={styles.sectionDescription}>
+                View and manage all previously analyzed cases.
+              </Text>
+              <Analysis navigation={navigation} />
+            </View>
+          </View>
+        )}
+        {activeSection === 'search-cases' && (
+          <View style={styles.card}>
+            <View style={styles.cardHeader}>
+              <Text style={styles.sectionTitle}>🔎 Search Cases</Text>
+            </View>
+            <View style={styles.cardBody}>
+              <Text style={styles.inputLabel}>Search by Title</Text>
+              <TextInput
+                style={styles.input}
+                value={searchTitle}
+                onChangeText={setSearchTitle}
+                placeholder="Enter case title to search"
+                onSubmitEditing={handleSearchCase}
+              />
+              <TouchableOpacity style={styles.actionButton} onPress={handleSearchCase}>
+                <Text style={styles.buttonText}>Search Case</Text>
+              </TouchableOpacity>
+              {searchResults.length > 0 && (
+                <View style={styles.resultsContainer}>
+                  <Text style={styles.resultsTitle}>Search Results:</Text>
+                  {searchResults.map((caseItem) => (
+                    <View key={caseItem._id} style={styles.resultItemContainer}>
+                      <Text style={styles.resultItem}>
+                        <Text style={styles.caseTitle}>{caseItem.title}</Text>: {caseItem.case_description}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              )}
+            </View>
+          </View>
+        )}
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ecf0f1',
+    flexDirection: 'row', // Layout for sidebar + main content
+    backgroundColor: '#FFF5E4', // Cream background
+  },
+  sidebar: {
+    width: 200,
+    backgroundColor: '#800000', // Maroon sidebar
+    paddingVertical: 20,
+    paddingHorizontal: 10,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    transition: 'width 0.3s ease', // Smooth collapse
+  },
+  sidebarCollapsed: {
+    width: 60,
+    justifyContent: 'flex-start',
+  },
+  toggleButton: {
+    alignSelf: 'flex-end',
+    marginBottom: 20,
+    backgroundColor: '#4E2727',
+    padding: 8,
+    borderRadius: 8,
+  },
+  toggleButtonText: {
+    color: '#FFF5E4',
+    fontSize: 20,
+  },
+  sidebarTitle: {
+    fontSize: 18,
+    color: '#FFF5E4', // Cream text
+    marginBottom: 20,
+    fontWeight: '600',
+  },
+  sidebarItem: {
+    marginBottom: 15,
+    padding: 10,
+    borderRadius: 8,
+    width: '100%',
+    alignItems: 'center',
+    backgroundColor: 'transparent', // Default background
+  },
+  activeSidebarItem: {
+    backgroundColor: '#4E2727', // Darker maroon for active item
+  },
+  sidebarText: {
+    color: '#FFF5E4', // Cream text
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  content: {
+    flex: 1,
     padding: 20,
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: '#FDF3E3', // Light cream
     borderRadius: 12,
     marginBottom: 20,
     shadowColor: '#000',
@@ -110,7 +202,7 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   cardHeader: {
-    backgroundColor: '#3498db',
+    backgroundColor: '#800000', // Maroon header
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderTopLeftRadius: 12,
@@ -122,36 +214,37 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 22,
     fontWeight: '600',
-    color: '#fff',
+    color: '#FFF5E4', // Cream text
   },
   sectionDescription: {
     fontSize: 16,
-    color: '#7f8c8d',
+    color: '#4E2727', // Dark maroon
     marginBottom: 20,
   },
   inputLabel: {
     fontSize: 16,
-    color: '#2c3e50',
+    color: '#4E2727',
     marginBottom: 10,
   },
   input: {
     height: 40,
-    borderColor: '#ccc',
+    borderColor: '#D7CCC8',
     borderWidth: 1,
     borderRadius: 8,
     paddingLeft: 10,
     fontSize: 16,
     marginBottom: 15,
+    backgroundColor: '#FFF',
+    color: '#4E2727',
   },
   actionButton: {
-    backgroundColor: '#3498db',
+    backgroundColor: '#800000',
     borderRadius: 8,
     paddingVertical: 12,
-    marginBottom: 20,
     alignItems: 'center',
   },
   buttonText: {
-    color: '#fff',
+    color: '#FFF5E4',
     fontSize: 18,
     fontWeight: '600',
   },
@@ -161,11 +254,11 @@ const styles = StyleSheet.create({
   resultsTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#34495e',
+    color: '#4E2727',
     marginBottom: 10,
   },
   resultItemContainer: {
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#F9EFE3',
     padding: 10,
     borderRadius: 8,
     marginBottom: 8,
@@ -177,11 +270,11 @@ const styles = StyleSheet.create({
   },
   resultItem: {
     fontSize: 16,
-    color: '#7f8c8d',
+    color: '#4E2727',
   },
   caseTitle: {
     fontWeight: 'bold',
-    color: '#2c3e50',
+    color: '#800000',
   },
 });
 

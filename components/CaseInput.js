@@ -14,6 +14,9 @@ const CaseInput = ({ navigation }) => {
   });
 
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [response, setResponse] = useState(null); 
+  const [loading, setLoading] = useState(false); 
+
 
   const handleDateChange = (event, selectedDate) => {
     if (selectedDate) {
@@ -23,6 +26,13 @@ const CaseInput = ({ navigation }) => {
   };
 
   const handleAnalyzeCase = async () => {
+    const { title, plaintiff, defendant, case_type, date_filed, description } = caseDetails;
+    if (!title || !plaintiff || !defendant || !case_type || !date_filed || !description) {
+      console.log("Error, Please fill all required fields.")
+      Alert.alert('Error', 'Please fill all required fields.');
+      return;
+    }
+
     try {
       const finalcase_type =
         caseDetails.case_type === 'Other'
@@ -44,9 +54,16 @@ const CaseInput = ({ navigation }) => {
       const response = await addCase(caseData);
       console.log('Response:', response);
       console.log("Case data: ", caseData);
-      navigation.navigate('ChatInterface');
+      
+      setResponse({
+        prediction: response.prediction,
+        articlesViolated: response.articles_violated,
+        explanation: response.explanation,
+      });
+      setLoading(false);
       Alert.alert('Success', `Case added with ID: ${response.case_id}`);
     } catch (error) {
+      setLoading(false);
       Alert.alert('Error', 'Failed to add case');
     }
   };
@@ -151,13 +168,38 @@ const CaseInput = ({ navigation }) => {
           numberOfLines={6}
         />
 
-        {/* Analyze Button */}
-        <TouchableOpacity
+         {/* Analyze Button */}
+         <TouchableOpacity
           style={styles.analyzeButton}
           onPress={handleAnalyzeCase}
+          disabled={loading}
         >
-          <Text style={styles.buttonText}>Analyze New Case</Text>
+          <Text style={styles.buttonText}>
+            {loading ? 'Analyzing...' : 'Analyze New Case'}
+          </Text>
         </TouchableOpacity>
+
+        {/* Display Response */}
+        {response && (
+          <View style={styles.responseContainer}>
+            <Text style={styles.responseLabel}>Prediction:</Text>
+            <Text style={styles.responseText}>{response.prediction}</Text>
+
+            <Text style={styles.responseLabel}>Articles Violated:</Text>
+            <Text style={styles.responseText}>{response.articlesViolated}</Text>
+
+            <Text style={styles.responseLabel}>Explanation:</Text>
+            <Text style={styles.responseText}>{response.explanation}</Text>
+
+            {/* Counter Questions Button */}
+            <TouchableOpacity
+              style={styles.counterButton}
+              onPress={() => navigation.navigate('ChatInterface')}
+            >
+              <Text style={styles.buttonText}> ⚖️ Need More Clarity? Ask AI LegalBot 🤖</Text>
+            </TouchableOpacity>
+          </View>
+        )}
 
       </View>
     </ScrollView>
@@ -221,6 +263,32 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  responseContainer: {
+    marginTop: 20,
+    padding: 15,
+    borderWidth: 1,
+    borderColor: '#bdc3c7',
+    borderRadius: 10,
+    backgroundColor: '#ecf0f1',
+  },
+  responseLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#34495e',
+    marginTop: 10,
+  },
+  responseText: {
+    fontSize: 14,
+    color: '#2c3e50',
+    marginTop: 5,
+  },
+  counterButton: {
+    marginTop: 20,
+    backgroundColor: '#27ae60',
+    padding: 10,
+    borderRadius: 10,
+    alignItems: 'center',
   },
 });
 

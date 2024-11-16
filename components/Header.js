@@ -7,8 +7,8 @@ const Header = () => {
   return (
     <View style={styles.header}>
       <Image source={logo} style={styles.logo} />
-      <Text style={styles.title}>LegalAI Assistant</Text>
-      <Text style={styles.subtitle}>Your Intelligent Legal Companion</Text>
+      {/* <Text style={styles.title}>LegalAI Assistant</Text> */}
+      {/* <Text style={styles.subtitle}>Your Intelligent Legal Companion</Text> */}
     </View>
   );
 };

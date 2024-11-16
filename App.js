@@ -9,6 +9,7 @@ import Home from './components/Home'; // Import Landing Page (Home)
 import ImageCheck from './components/ImageCheck'; // Import ImageCheck (if needed)
 import LoginScreen from './components/LoginScreen'; // Import Login Screen
 import SignupScreen from './components/SignupScreen'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createNativeStackNavigator();
 

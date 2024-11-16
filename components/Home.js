@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
+import { ScrollView } from 'react-native-web';
 
 const { width, height } = Dimensions.get('window');
 
@@ -53,7 +54,7 @@ export default function LandingPage() {
         </View>
 
         {/* Extended App Description */}
-        <View style={styles.extendedDescriptionContainer}>
+        <ScrollView style={styles.extendedDescriptionContainer}>
           <Text style={styles.extendedDescriptionTitle}>What is JusticeMet?</Text>
           <Text style={styles.extendedDescriptionText}>
             JusticeMet is an AI-powered platform designed to help legal professionals analyze cases and determine whether a defendant is guilty or not. 
@@ -66,7 +67,7 @@ export default function LandingPage() {
           <Text style={styles.extendedDescriptionText}>
             JusticeMet is the perfect tool for legal professionals looking for a reliable, fast, and secure way to analyze cases and make informed decisions.
           </Text>
-        </View>
+        </ScrollView>
 
         {/* Authentication Buttons */}
         <View style={styles.authContainer}>
